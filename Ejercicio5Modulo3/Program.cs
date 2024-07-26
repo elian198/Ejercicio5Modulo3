@@ -13,6 +13,13 @@ namespace Ejercicio5Modulo3
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDependencyCustom(builder.Configuration);
+
+            builder.Services.AddHttpClient("servicio-posts", (client) =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration.GetSection("URL_SERVICES_POSTS").Value);
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -25,7 +32,7 @@ namespace Ejercicio5Modulo3
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseMiddleware<GlobalExceptionHandler>();
 
             app.MapControllers();
 
